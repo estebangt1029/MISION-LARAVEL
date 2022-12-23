@@ -25,10 +25,16 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::group(['prefix' => 'films','middleware' => ['auth']], function () {
 
+    Route::group(['middleware' => ['role:admin']], function () {
         Route::post('', [FilmController::class, 'create']);
-        Route::get('', [FilmController::class, 'index']);
         Route::put('/{id}', [FilmController::class, 'update']);
-        Route::get('/{id}', [FilmController::class, 'show']);
         Route::delete('/{id}', [FilmController::class, 'destroy']);
+        
+    });
+
+    Route::group(['middleware' => ['role:admin|cliente']], function () {
+        Route::get('', [FilmController::class, 'index']);
+        Route::get('/{id}', [FilmController::class, 'show']);
+    });
     
 });
